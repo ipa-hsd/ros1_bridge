@@ -9,12 +9,7 @@ jobs:
     strategy:
       matrix:
         env:
-          - {DOCKER_IMAGE: "ros:rolling-ros1-bridge-focal",
-            AFTER_SCRIPT: |
-              "source /opt/ros/noetic/setup.bash
-               source /opt/ros/rolling/local_setup.bash
-               colcon build --symlink-install --packages-select ros1_bridge --cmake-force-configure"
-            }
+          - {DOCKER_IMAGE: "ros:rolling-ros1-bridge-focal", AFTER_SCRIPT: "source /opt/ros/noetic/setup.bash && source /opt/ros/rolling/local_setup.bash && colcon build --symlink-install --packages-select ros1_bridge --cmake-force-configure"}
     env:
       CCACHE_DIR: /github/home/.ccache # Directory for ccache (and how we enable ccache in industrial_ci)
     runs-on: ubuntu-latest

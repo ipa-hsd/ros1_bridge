@@ -13,6 +13,7 @@ jobs:
     env:
       CCACHE_DIR: /github/home/.ccache # Directory for ccache (and how we enable ccache in industrial_ci)
     runs-on: ubuntu-latest
+    container: ros:rolling-ros1-bridge-focal
     steps:
       - uses: actions/checkout@v2
       # This step will fetch/store the directory used by ccache before/after the ci run
@@ -23,8 +24,8 @@ jobs:
       # Run industrial_ci
       #- uses: 'ros-industrial/industrial_ci@master'
       #  env: ${{ matrix.env }}
-      - run: |
-          docker pull ros:rolling-ros1-bridge-focal
+      - name: Build ros1-bridge
+        run: |
           source /opt/ros/noetic/setup.bash
           source /opt/ros/rolling/local_setup.bash
           colcon build --symlink-install --packages-select ros1_bridge --cmake-force-configure

@@ -21,9 +21,10 @@ jobs:
           path: ${{ env.CCACHE_DIR }}
           key: ccache-${{ matrix.env.ROS_DISTRO }}-${{ matrix.env.ROS_REPO }}
       # Run industrial_ci
-      - uses: 'ros-industrial/industrial_ci@master'
-        env: ${{ matrix.env }}
+      #- uses: 'ros-industrial/industrial_ci@master'
+      #  env: ${{ matrix.env }}
       - run: |
+          docker pull ros:rolling-ros1-bridge-focal
           source /opt/ros/noetic/setup.bash
           source /opt/ros/rolling/local_setup.bash
-          colcon build --symlink-install --packages-select ros1_bridge --cmake-force-configure"
+          colcon build --symlink-install --packages-select ros1_bridge --cmake-force-configure

@@ -23,8 +23,7 @@ jobs:
       # Run industrial_ci
       - uses: 'ros-industrial/industrial_ci@master'
         env: ${{ matrix.env }}
-variables:
-  after_script: >
-    source /opt/ros/noetic/setup.bash
-    source /opt/ros/rolling/local_setup.bash
-    colcon build --symlink-install --packages-select ros1_bridge --cmake-force-configure"
+      - run: |
+          source /opt/ros/noetic/setup.bash
+          source /opt/ros/rolling/local_setup.bash
+          colcon build --symlink-install --packages-select ros1_bridge --cmake-force-configure"

@@ -12,7 +12,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Build ros1-bridge
-        run: ./build_bridge.sh
+        run: |
+          chmod +x ./build_bridge.sh
+          ./build_bridge.sh
   
 
 

@@ -13,8 +13,11 @@ jobs:
       - uses: actions/checkout@v2
       - name: Build ros1-bridge
         run: |
-          chmod +x ./build_bridge.sh
-          ./build_bridge.sh
+          bash ./build_bridge.sh
+      - name: Test ros1-bridge
+        run: |
+          bash ./test_bridge.sh
+
   
 
 

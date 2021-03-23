@@ -14,7 +14,7 @@ jobs:
       - name: Build ros1-bridge
         run: |
           find . -name build_bridge.sh
-          #chmod +x "${GITHUB_WORKSPACE}/build_bridge.sh "
-          #"${GITHUB_WORKSPACE}/build_bridge.sh"
+          chmod +x "./build_bridge.sh "
+          "./build_bridge.sh"
 
 

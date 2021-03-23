@@ -7,8 +7,11 @@ on: [push, pull_request] # on all pushes and PRs
 jobs:
   ros1_bridge:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        distro: [ros:rolling-ros-base-focal, ros:foxy-ros-base-focal]
     container:
-      image: ros:rolling-ros1-bridge-focal
+      image: ${{ matrix.distro }}
     steps:
       - uses: actions/checkout@v2
       - name: Build ros1-bridge
@@ -17,7 +20,5 @@ jobs:
       - name: Test ros1-bridge
         run: |
           bash ./test_bridge.sh
-
-  
 
 

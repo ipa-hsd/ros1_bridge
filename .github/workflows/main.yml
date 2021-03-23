@@ -20,5 +20,3 @@ jobs:
       - name: Test ros1-bridge
         run: |
           bash ./test_bridge.sh
-
-

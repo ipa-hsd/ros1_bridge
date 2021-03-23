@@ -13,8 +13,8 @@ jobs:
       - name: Build ros1-bridge
         run: |
           echo $ROS1_DISTRO
-          if [ -f /opt/ros/$ROS1_DISTRO/setup.bash ]; then
-            source /opt/ros/$ROS1_DISTRO/setup.bash
+          if [ -f /opt/ros/$ROS1_DISTRO/setup.sh ]; then
+            source /opt/ros/$ROS1_DISTRO/setup.sh
             echo "file exists"
           else
             echo "file does not exist"

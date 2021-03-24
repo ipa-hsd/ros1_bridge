@@ -860,12 +860,12 @@ def load_ros2_service(ros2_srv):
 
 
 # make field types hashable
-def FieldHash(self):
+def field_hash(self):
     return self.name.__hash__()
 
 
-genmsg.msgs.Field.__hash__ = FieldHash
-rosidl_adapter.parser.Field.__hash__ = FieldHash
+genmsg.msgs.Field.__hash__ = field_hash
+rosidl_adapter.parser.Field.__hash__ = field_hash
 
 
 class Mapping:

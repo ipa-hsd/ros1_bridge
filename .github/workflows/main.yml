@@ -17,7 +17,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: install ccache
-        run: sudo apt-get -qq install ccache
+        run: |
+          sudo apt-get update -y
+          sudo apt-get -qq -y install ccache
       - name: ccache cache
         uses: actions/cache@v2
         with:

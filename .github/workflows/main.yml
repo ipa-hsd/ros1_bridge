@@ -12,8 +12,17 @@ jobs:
         distro: ["ros:rolling-ros1-bridge-focal", "ros:foxy-ros1-bridge-focal"]
     container:
       image: ${{ matrix.distro }}
+    env:
+      CCACHE_DIR: "${{ github.workspace }}/.ccache"
     steps:
       - uses: actions/checkout@v2
+      - name: ccache cache
+        uses: actions/cache@v2
+        with:
+          path: ${{ env.CCACHE_DIR }}
+          key: ccache-${{ matrix.distro }}-${{github.run_id}}
+          restore-keys: |
+            ccache-${{ matrix.distro }}
       - name: Build ros1-bridge
         run: |
           bash ./build_bridge.sh

@@ -16,6 +16,8 @@ jobs:
       CCACHE_DIR: "${{ github.workspace }}/.ccache"
     steps:
       - uses: actions/checkout@v2
+      - name: install ccache
+        run: sudo apt -qq install ccache
       - name: ccache cache
         uses: actions/cache@v2
         with:
@@ -23,6 +25,8 @@ jobs:
           key: ccache-${{ matrix.distro }}-${{github.run_id}}
           restore-keys: |
             ccache-${{ matrix.distro }}
+      - name: ccache stats
+        run: ccache -s
       - name: Build ros1-bridge
         run: |
           bash ./build_bridge.sh

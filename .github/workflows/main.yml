@@ -32,6 +32,6 @@ jobs:
       - name: Build ros1-bridge
         run: |
           bash ./build_bridge.sh
-      - name: Test ros1-bridge
-        run: |
-          bash ./test_bridge.sh
+      # - name: Test ros1-bridge
+      #   run: |
+      #     bash ./test_bridge.sh

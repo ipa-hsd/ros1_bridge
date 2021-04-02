@@ -1,6 +1,10 @@
 #!/bin/bash
 set -e
 
+if [ -n "$CCACHE_DIR" ]; then
+    export PATH="/usr/lib/ccache:$PATH"
+fi
+
 unset $ROS_DISTRO
 source /opt/ros/$ROS1_DISTRO/setup.bash
 unset $ROS_DISTRO

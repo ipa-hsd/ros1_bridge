@@ -1,6 +1,7 @@
 #!/bin/bash
 set -e
 
+# setup ccache
 if [ -n "$CCACHE_DIR" ]; then
     export PATH="/usr/lib/ccache:$PATH"
 fi

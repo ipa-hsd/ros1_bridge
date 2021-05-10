@@ -17,6 +17,7 @@
 #include <memory>
 #include <set>
 #include <string>
+#include <utility>
 #include <vector>
 
 // include ROS 1
@@ -36,8 +37,6 @@
 // include ROS 2
 #include "rclcpp/rclcpp.hpp"
 #include "rclcpp/scope_exit.hpp"
-
-#include "rcutils/get_env.h"
 
 #include "ros1_bridge/bridge.hpp"
 
@@ -182,11 +181,16 @@ void update_bridge(
     bridge.ros1_type_name = ros1_type_name;
     bridge.ros2_type_name = ros2_type_name;
 
+    auto ros2_publisher_qos = rclcpp::QoS(rclcpp::KeepLast(10));
+    if (topic_name == "/tf_static") {
+      ros2_publisher_qos.keep_all();
+      ros2_publisher_qos.transient_local();
+    }
     try {
       bridge.bridge_handles = ros1_bridge::create_bridge_from_1_to_2(
         ros1_node, ros2_node,
         bridge.ros1_type_name, topic_name, 10,
-        bridge.ros2_type_name, topic_name, 10);
+        bridge.ros2_type_name, topic_name, ros2_publisher_qos);
     } catch (std::runtime_error & e) {
       fprintf(
         stderr,
@@ -695,6 +699,21 @@ int main(int argc, char * argv[])
         }
       }
 
+      // collect available services (not clients)
+      std::set<std::string> service_names;
+      std::vector<std::pair<std::string, std::string>> node_names_and_namespaces =
+        ros2_node->get_node_graph_interface()->get_node_names_and_namespaces();
+      for (auto & pair : node_names_and_namespaces) {
+        if (pair.first == ros2_node->get_name() && pair.second == ros2_node->get_namespace()) {
+          continue;
+        }
+        std::map<std::string, std::vector<std::string>> services_and_types =
+          ros2_node->get_service_names_and_types_by_node(pair.first, pair.second);
+        for (auto & it : services_and_types) {
+          service_names.insert(it.first);
+        }
+      }
+
       auto ros2_services_and_types = ros2_node->get_service_names_and_types();
       std::map<std::string, std::map<std::string, std::string>> active_ros2_services;
       for (const auto & service_and_types : ros2_services_and_types) {
@@ -725,12 +744,14 @@ int main(int argc, char * argv[])
           fprintf(stderr, "invalid service type '%s', skipping...\n", service_type.c_str());
           continue;
         }
-        auto service_type_package_name = service_type.substr(0, separator_position);
-        auto service_type_srv_name = service_type.substr(separator_position + 1);
 
-        // TODO(wjwwood): fix bug where just a ros2 client will cause a ros1 service to be made
-        active_ros2_services[service_name]["package"] = service_type_package_name;
-        active_ros2_services[service_name]["name"] = service_type_srv_name;
+        // only bridge if there is a service, not for a client
+        if (service_names.find(service_name) != service_names.end()) {
+          auto service_type_package_name = service_type.substr(0, separator_position);
+          auto service_type_srv_name = service_type.substr(separator_position + 1);
+          active_ros2_services[service_name]["package"] = service_type_package_name;
+          active_ros2_services[service_name]["name"] = service_type_srv_name;
+        }
       }
 
       {
